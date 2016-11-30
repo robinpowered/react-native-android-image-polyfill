@@ -20,7 +20,7 @@ export default class ImagePolyfill extends React.Component {
    * @return {void}
    */
   componentWillMount() {
-    if (isAndroid() && this.props.onError) {
+    if (isAndroid() && this.props.onError && this.props.source && this.props.source.uri) {
       this.verifyImage();
     }
   }
@@ -32,7 +32,11 @@ export default class ImagePolyfill extends React.Component {
    * @return {void}
    */
   componentWillReceiveProps(nextProps) {
-    if (this.props.source.uri !== nextProps.source.uri && isAndroid() && nextProps.onError) {
+    if (nextProps.source && nextProps.source.uri &&
+      (!this.props.source || this.props.source.uri !== nextProps.source.uri) &&
+      isAndroid() &&
+      nextProps.onError
+    ) {
       this.verifyImage();
     }
   }
