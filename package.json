@@ -15,6 +15,9 @@
     "image",
     "android"
   ],
+  "peerDependencies": {
+    "react-native": ">=0.17"
+  },
   "author": "Atticus White <contact@atticuswhite.com> (http://atticuswhite.com/)",
   "license": "MIT",
   "bugs": {
