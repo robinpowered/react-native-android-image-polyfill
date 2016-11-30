@@ -1,0 +1,24 @@
+{
+  "name": "react-native-android-image-polyfill",
+  "version": "1.0.0",
+  "description": "A React Native Image component that polyfills onError behavior",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/robinpowered/react-native-android-image-polyfill.git"
+  },
+  "keywords": [
+    "react-native",
+    "image",
+    "android"
+  ],
+  "author": "Atticus White <contact@atticuswhite.com> (http://atticuswhite.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robinpowered/react-native-android-image-polyfill/issues"
+  },
+  "homepage": "https://github.com/robinpowered/react-native-android-image-polyfill#readme"
+}
