@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Platform} from 'react-native';
 
 const isAndroid = () => Platform.OS === 'android';
@@ -11,37 +11,10 @@ const isAndroid = () => Platform.OS === 'android';
  *
  * This component should only be used for loading remote images, not local resources.
  */
-export default class ImagePolyfill extends React.Component {
-  static propTypes = Image.propTypes;
-  static defaultProps = Image.defaultProps;
+const ImagePolyfill = (props) => {
+  const [prevSource, setPrevSource] = useState(props.source);
 
-  /**
-   * When the component will mount, verify the image on Android.
-   * @return {void}
-   */
-  componentWillMount() {
-    if (isAndroid() && this.props.onError && this.props.source && this.props.source.uri) {
-      this.verifyImage();
-    }
-  }
-
-  /**
-   * When the image changes on Android, verify the image.
-   *
-   * @param  {Object} nextProps The next incoming properties.
-   * @return {void}
-   */
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.source && nextProps.source.uri &&
-      (!this.props.source || this.props.source.uri !== nextProps.source.uri) &&
-      isAndroid() &&
-      nextProps.onError
-    ) {
-      this.verifyImage();
-    }
-  }
-
-  /**
+    /**
    * `Image.prefetch` is used to load the image and `catch` the failure.
    * Android's `Image` `onError` callback does not get invoked if the remote image fails to load with a `404`.
    * Prefetch, however, will reject the promise if it fails to load, allowing us to detect failures to
@@ -52,12 +25,36 @@ export default class ImagePolyfill extends React.Component {
    *
    * @return {void}
    */
-  verifyImage() {
-    var {uri} = this.props.source;
-    Image.prefetch(uri).catch(e => this.props.onError(e));
+  const verifyImage = () => {
+    var {uri} = props.source;
+    Image.prefetch(uri).catch(e => props.onError(e));
   }
+  /**
+   * When the component will mount, verify the image on Android.
+   * @return {void}
+   */
+  useEffect(() => {
+    if (isAndroid() && props.onError && props.source && props.source.uri) {
+      verifyImage();
+    }
+  }, []);
 
-  render() {
-    return <Image {...this.props} />;
-  }
+    /**
+   * When the image changes on Android, verify the image.
+   *
+   * @param  {Object} nextProps The next incoming properties.
+   * @return {void}
+   */
+  useEffect(() => {
+    if (props.source && props.source.uri && (!prevSource || prevSource.uri !== props.source.uri) && isAndroid() && props.onError) {
+      setPrevSource(props.source);
+      verifyImage();
+    }
+  }, [props.source]);
 }
+
+ImagePolyfill.propTypes = Image.propTypes;
+ImagePolyfill.defaultProps = Image.defaultProps;
+
+
+export default ImagePolyfill;
